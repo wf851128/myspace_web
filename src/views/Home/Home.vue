@@ -56,12 +56,12 @@
             <i class="icon"></i>
             b/coding
           </li>
-          <li class="r-c-item">
+          <li class="content__right__communities-item">
             <span class="index">2</span>
             <i class="icon"></i>
             b/tree_hole
           </li>
-          <li class="r-c-item">
+          <li class="content__right__communities-item">
             <span class="index">3</span>
             <i class="icon"></i>
             b/job
@@ -307,8 +307,8 @@
       box-sizing: border-box;
       text-align: center;
     }
-    &__communities-content {
-    }
+    // &__communities-content {
+    // }
     &__communities-item {
       align-items: center;
       display: flex;
