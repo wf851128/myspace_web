@@ -73,7 +73,68 @@
 </template>
 <script>
 export default {
-
+  name: 'Publish',
+  data () {
+    return {
+      title: '',
+      content: '',
+      showCommunityList: false,
+      selectCommunity: {},
+      communityList: []
+    }
+  },
+  methods: {
+    submit () {
+      this.$axios({
+        method: 'post',
+        url: '/post',
+        data: JSON.stringify({
+          title: this.title,
+          content: this.content,
+          community_id: this.selectCommunity.id
+        })
+      })
+        .then(response => {
+          console.log(response.data)
+          if (response.code === 1000) {
+            this.$router.push({ path: this.redirect || '/' })
+          } else {
+            console.log(response.msg)
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    getCommunityList () {
+      this.$axios({
+        method: 'get',
+        url: '/community'
+      })
+        .then(response => {
+          console.log(response.data)
+          if (response.code === 1000) {
+            this.communityList = response.data
+          } else {
+            console.log(response.msg)
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    showCommunity () {
+      this.showCommunityList = !this.showCommunityList
+    },
+    selected (index) {
+      this.selectCommunity = this.communityList[index]
+      this.showCommunityList = false
+      console.log(this.selectCommunity)
+    }
+  },
+  mounted: function () {
+    this.getCommunityList()
+  }
 }
 </script>
 <style lang="scss" scoped>

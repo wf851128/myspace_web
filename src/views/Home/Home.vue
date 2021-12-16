@@ -107,6 +107,85 @@
     </div>
   </div>
 </template>
+<script>
+
+export default {
+  name: 'Home',
+  components: {},
+  data () {
+    return {
+      order: 'time',
+      page: 1,
+      postList: []
+    }
+  },
+  methods: {
+    selectOrder (order) {
+      this.order = order
+      this.getPostList()
+    },
+    goPublish () {
+      this.$router.push({ name: 'Publish' })
+    },
+    goDetail (id) {
+      this.$router.push({ name: 'Content', params: { id: id } })
+    },
+    getPostList () {
+      this.$axios({
+        method: 'get',
+        url: '/posts2',
+        params: {
+          page: this.page,
+          order: this.order
+        }
+      })
+        .then(response => {
+          console.log(response.data, 222)
+          if (response.code === 1000) {
+            this.postList = response.data
+          } else {
+            console.log(response.msg)
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    // eslint-disable-next-line camelcase
+    vote (post_id, direction) {
+      this.$axios({
+        method: 'post',
+        url: '/vote',
+        data: JSON.stringify({
+          post_id: post_id,
+          direction: direction
+        })
+      })
+        .then(response => {
+          if (response.code === 1000) {
+            console.log('vote success')
+          } else {
+            console.log(response.msg)
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+  },
+  mounted: function () {
+    this.getPostList()
+  },
+  computed: {
+    timeOrder () {
+      return this.order === 'time'
+    },
+    scoreOrder () {
+      return this.order === 'score'
+    }
+  }
+}
+</script>
 <style lang="scss" scoped>
 .content {
   max-width: 100%;

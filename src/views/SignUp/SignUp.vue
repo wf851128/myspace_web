@@ -39,7 +39,44 @@
 </template>
 <script>
 export default {
+  name: 'SignUp',
+  data () {
+    return {
+      username: '',
+      password: '',
+      re_password: '',
+      submitted: false
+    }
+  },
+  computed: {
 
+  },
+  created () {
+
+  },
+  methods: {
+    submit () {
+      this.$axios({
+        method: 'post',
+        url: '/signup',
+        data: JSON.stringify({
+          username: this.username,
+          password: this.password,
+          re_password: this.re_password
+        })
+      }).then((res) => {
+        console.log(res.data)
+        if (res.code === 1000) {
+          console.log('signup success')
+          this.$router.push({ name: 'Login' })
+        } else {
+          console.log(res.msg)
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
