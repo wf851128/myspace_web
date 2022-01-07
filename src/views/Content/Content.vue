@@ -76,21 +76,7 @@ export default {
   },
   methods: {
     getPostDetail () {
-      this.$axios({
-        method: 'get',
-        url: '/post/' + this.$route.params.id
-      })
-        .then(response => {
-          console.log(1, response.data)
-          if (response.code === 1000) {
-            this.post = response.data
-          } else {
-            console.log(response.msg)
-          }
-        })
-        .catch(error => {
-          console.log(error)
-        })
+
     }
   },
   mounted: function () {

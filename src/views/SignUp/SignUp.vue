@@ -9,7 +9,7 @@
                name="name"
                id="name"
                placeholder="用户名"
-               v-model="username" />
+               v-model="data.username" />
       </div>
       <div class="main__container__form-group">
         <label for="pass">密码</label>
@@ -18,7 +18,7 @@
                name="pass"
                id="pass"
                placeholder="密码"
-               v-model="password" />
+               v-model="data.password" />
       </div>
       <div class="main__container__form-group">
         <label for="re_pass">确认密码</label>
@@ -27,7 +27,7 @@
                name="re_pass"
                id="re_pass"
                placeholder="确认密码"
-               v-model="re_password" />
+               v-model="data.re_password" />
       </div>
       <div class="main__container__form-btn">
         <button type="button"
@@ -38,44 +38,38 @@
   </div>
 </template>
 <script>
+import { reactive } from '@vue/reactivity'
+import { useRouter } from 'vue-router'
+import { post } from '../../service/api'
 export default {
   name: 'SignUp',
-  data () {
-    return {
+  setup () {
+    const data = reactive({
       username: '',
       password: '',
       re_password: '',
       submitted: false
-    }
-  },
-  computed: {
-
-  },
-  created () {
-
-  },
-  methods: {
-    submit () {
-      this.$axios({
-        method: 'post',
-        url: '/signup',
-        data: JSON.stringify({
-          username: this.username,
-          password: this.password,
-          re_password: this.re_password
+    })
+    const router = useRouter()
+    const submit = async () => {
+      try {
+        const result = await post('/signup', {
+          user_name: data.username,
+          password: data.password,
+          re_password: data.re_password
         })
-      }).then((res) => {
-        console.log(res.data)
-        if (res.code === 1000) {
-          console.log('signup success')
-          this.$router.push({ name: 'Login' })
+        console.log(result)
+        debugger
+        if (result.code === 1000) {
+          router.push('/')
         } else {
-          console.log(res.msg)
+          alert('注册失败')
         }
-      }).catch((error) => {
-        console.log(error)
-      })
+      } catch (error) {
+        alert(error)
+      }
     }
+    return { data, submit }
   }
 }
 </script>

@@ -6,7 +6,7 @@
         <label for="name">用户名</label>
         <input type="text"
                class="main__container__form-control"
-               v-model="username"
+               v-model="data.username"
                name="name"
                id="name"
                placeholder="用户名" />
@@ -15,7 +15,7 @@
         <label for="pass">密码</label>
         <input type="password"
                class="main__container__form-control"
-               v-model="password"
+               v-model="data.password"
                name="pass"
                id="pass"
                placeholder="密码" />
@@ -30,43 +30,36 @@
 </template>
 
 <script>
+import { reactive } from '@vue/reactivity'
+import { useRouter } from 'vue-router'
+import { post } from '../../service/api'
 export default {
   name: 'Login',
-  data () {
-    return {
+  setup () {
+    const data = reactive({
       username: '',
       password: '',
       submitted: false
-    }
-  },
-  computed: {
-
-  },
-  created () {
-
-  },
-  methods: {
-    submit () {
-      this.$axios({
-        method: 'post',
-        url: '/login',
-        data: JSON.stringify({
-          username: this.username,
-          password: this.password
+    })
+    const router = useRouter()
+    const submit = async () => {
+      try {
+        const result = await post('/login', {
+          user_name: data.username,
+          password: data.password
         })
-      }).then((res) => {
-        console.log(res.data)
-        if (res.code === 1000) {
-          localStorage.setItem('loginResult', JSON.stringify(res.data))
-          this.$store.commit('login', res.data)
-          this.$router.push({ path: this.redirect || '/' })
+        console.log(result)
+        debugger
+        if (result.code === 1000) {
+          router.push('Home')
         } else {
-          console.log(res.msg)
+          alert('登录失败')
         }
-      }).catch((error) => {
-        console.log(error)
-      })
+      } catch (error) {
+        alert(error)
+      }
     }
+    return { data, submit }
   }
 }
 </script>
